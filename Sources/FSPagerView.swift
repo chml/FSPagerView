@@ -191,6 +191,10 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
             self.collectionViewLayout.forceInvalidate()
         }
     }
+
+    /// Force RTL Layout
+    @objc
+    open var forceRTL: Bool = false
     
     // MARK: - Public readonly-properties
     
@@ -333,6 +337,13 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         let index = indexPath.item
         self.dequeingSection = indexPath.section
         let cell = self.dataSource!.pagerView(self, cellForItemAt: index)
+        if #available(iOS 9.0, *) {
+          if forceRTL || UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute) == .rightToLeft {
+            cell.transform = CGAffineTransform(scaleX: -1, y: 1)
+          } else {
+            cell.transform = .identity
+          }
+        }
         return cell
     }
     
@@ -568,7 +579,13 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         self.contentView.addSubview(collectionView)
         self.collectionView = collectionView
         self.collectionViewLayout = collectionViewLayout
-        
+        if #available(iOS 9.0, *) {
+          if forceRTL || UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute) == .rightToLeft {
+            self.collectionView.transform = CGAffineTransform(scaleX: -1, y: 1)
+          } else {
+            self.collectionView.transform = .identity
+          }
+        }
     }
     
     fileprivate func startTimer() {

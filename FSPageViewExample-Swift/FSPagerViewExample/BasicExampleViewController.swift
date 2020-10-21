@@ -31,6 +31,16 @@ class BasicExampleViewController: UIViewController,UITableViewDataSource,UITable
             self.pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         }
     }
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    if #available(iOS 9.0, *) {
+      if UIView.userInterfaceLayoutDirection(for: self.view.semanticContentAttribute) == .rightToLeft {
+        self.pageControl.transform = CGAffineTransform(scaleX: -1, y: 1)
+      }
+    }
+
+  }
     
     // MARK:- UITableViewDataSource
     
